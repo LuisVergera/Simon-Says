@@ -1,13 +1,25 @@
-const green = document.querySelector("#0");
-const yellow = document.querySelector("#1");
-const red = document.querySelector("#2");
-const blue = document.querySelector("#3");
+const green = document.getElementById("0");
+const yellow = document.getElementById("1");
+const blue = document.getElementById("2");
+const red = document.getElementById("3");
 
-const sequence = [green, yellow, red, blue];
-const randomSequence = sequence[Math.floor(Math.random() * sequence.length)];
+const panels = document.getElementsByClassName("panel");
+const buttons = Array.from(panels);
 
-let simonSequence = [];
-let playerSequence = [];
+const randomSequence = Math.floor(Math.random() * 4);
+const activeSequence = [green, yellow, red, blue];
+
+var simonSequence = [];
+var playerSequence = [];
+
+let round = 0;
+
+function beginGame() {
+  simonSequence = [];
+  //createSimonSequence();
+  simonTurn();
+  //playerTurn();
+}
 
 function flash(colour) {
   colour.classList.add("active");
@@ -16,19 +28,45 @@ function flash(colour) {
   }, 250);
 }
 
-function flashRandomColour() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(flash(randomSequence));
-    }, 1500);
-  });
+function createSimonSequence() {
+  for (let i = 0; i < 20; i++) {
+    simonSequence.push(Math.floor(Math.random() * 4));
+  }
 }
 
-function round() {}
+//function round() {}
 
 function simonTurn() {
   playerSequence = [];
+  createSimonSequence();
+  //round += 1;
+  simonTurnHandler();
+}
+
+function getColour() {
+  let randomSequence = Math.floor(Math.random() * 4);
+  let activePanels = panels[randomSequence];
+  simonSequence.push(activePanels.id);
+}
+
+function simonTurnHandler() {
+  let i = 0;
+  let intervalID = setInterval(function () {
+    flash(panels[[simonSequence[i]]]);
+    i++;
+    if (i >= round) {
+      clearInterval(intervalID);
+      playerTurn();
+      compareSequenceArrays();
+      //enableClick();
+    }
+  }, 800);
+}
+
+function playerTurn() {
+  playerTurnHandler();
   compareSequenceArrays();
+  round += 1;
 }
 
 function playerTurnHandler() {
@@ -49,10 +87,22 @@ function playerTurnHandler() {
   };
 }
 
-playerTurnHandler();
+//playerTurnHandler();
 
-function compareSequenceArrays(playerSequence, simonSequence) {
-  if (playerSequence != simonSequence) {
-    gameover();
+function compareSequenceArrays() {
+  for (let i = 0; i < playerSequence.length; i++) {
+    if (simonSequence[i] === playerSequence[i]) {
+      simonTurn();
+    } else {
+      console.log("game over");
+    }
   }
+}
+//compareSequenceArrays();
+
+function enableClick() {
+  green.onclick = playerTurn;
+  yellow.onclick = playerTurn;
+  blue.onclick = playerTurn;
+  red.onclick = playerTurn;
 }
