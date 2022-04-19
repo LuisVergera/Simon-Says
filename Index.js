@@ -2,10 +2,10 @@ const green = document.getElementById("0");
 const yellow = document.getElementById("1");
 const blue = document.getElementById("2");
 const red = document.getElementById("3");
-
+const startButton = document.getElementById("start");
+const resetButton = document.getElementById("reset");
 const panels = document.getElementsByClassName("panel");
-const buttons = Array.from(panels);
-
+let $score = document.getElementById("score");
 const randomSequence = Math.floor(Math.random() * 4);
 const activeSequence = [green, yellow, red, blue];
 
@@ -13,33 +13,28 @@ var simonSequence = [];
 var playerSequence = [];
 
 let round = 0;
+let score = simonSequence.length;
+$score.innerText = "SCORE " + simonSequence.length;
+
+startButton.onclick = beginGame;
+resetButton.onclick = resetGame;
 
 function beginGame() {
   simonSequence = [];
-  //createSimonSequence();
   simonTurn();
-  //playerTurn();
 }
 
-function flash(colour) {
-  colour.classList.add("active");
+function flash(panel) {
+  panel.classList.add("active");
   setTimeout(function () {
-    colour.classList.remove("active");
+    panel.classList.remove("active");
   }, 250);
 }
 
-function createSimonSequence() {
-  for (let i = 0; i < 20; i++) {
-    simonSequence.push(Math.floor(Math.random() * 4));
-  }
-}
-
-//function round() {}
-
 function simonTurn() {
   playerSequence = [];
-  createSimonSequence();
-  //round += 1;
+  round += 1;
+  getColour();
   simonTurnHandler();
 }
 
@@ -50,59 +45,51 @@ function getColour() {
 }
 
 function simonTurnHandler() {
+  disableClick();
   let i = 0;
   let intervalID = setInterval(function () {
-    flash(panels[[simonSequence[i]]]);
+    flash(panels[simonSequence[i]]);
     i++;
     if (i >= round) {
       clearInterval(intervalID);
-      playerTurn();
-      compareSequenceArrays();
-      //enableClick();
+      enableClick();
     }
   }, 800);
 }
 
 function playerTurn() {
-  playerTurnHandler();
+  flash(this);
+  playerSequence.push(this.id);
   compareSequenceArrays();
-  round += 1;
 }
-
-function playerTurnHandler() {
-  document.getElementById("0").onclick = function () {
-    playerSequence.push(0);
-  };
-
-  document.getElementById("1").onclick = function () {
-    playerSequence.push(1);
-  };
-
-  document.getElementById("2").onclick = function () {
-    playerSequence.push(2);
-  };
-
-  document.getElementById("3").onclick = function () {
-    playerSequence.push(3);
-  };
-}
-
-//playerTurnHandler();
 
 function compareSequenceArrays() {
   for (let i = 0; i < playerSequence.length; i++) {
-    if (simonSequence[i] === playerSequence[i]) {
+    if (simonSequence[i] != playerSequence[i]) {
+      alert("game over");
+    }
+    if (playerSequence.length == simonSequence.length) {
       simonTurn();
-    } else {
-      console.log("game over");
     }
   }
 }
-//compareSequenceArrays();
 
 function enableClick() {
   green.onclick = playerTurn;
   yellow.onclick = playerTurn;
   blue.onclick = playerTurn;
   red.onclick = playerTurn;
+}
+
+function disableClick() {
+  green.onclick = null;
+  yellow.onclick = null;
+  blue.onclick = null;
+  red.onclick = null;
+}
+
+function resetGame() {
+  simonSequence = [];
+  playerSequence = [];
+  round = 0;
 }
