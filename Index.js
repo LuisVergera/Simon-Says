@@ -13,11 +13,9 @@ var simonSequence = [];
 var playerSequence = [];
 
 let round = 0;
-let score = simonSequence.length;
-$score.innerText = "SCORE " + simonSequence.length;
 
+document.querySelector("#score").innerText = simonSequence.length;
 startButton.onclick = beginGame;
-resetButton.onclick = resetGame;
 
 function beginGame() {
   simonSequence = [];
@@ -34,6 +32,7 @@ function flash(panel) {
 function simonTurn() {
   playerSequence = [];
   round += 1;
+  score();
   getColour();
   simonTurnHandler();
 }
@@ -54,7 +53,7 @@ function simonTurnHandler() {
       clearInterval(intervalID);
       enableClick();
     }
-  }, 800);
+  }, 1000);
 }
 
 function playerTurn() {
@@ -66,11 +65,12 @@ function playerTurn() {
 function compareSequenceArrays() {
   for (let i = 0; i < playerSequence.length; i++) {
     if (simonSequence[i] != playerSequence[i]) {
-      alert("game over");
+      gameOver();
+      return;
     }
-    if (playerSequence.length == simonSequence.length) {
-      simonTurn();
-    }
+  }
+  if (playerSequence.length == simonSequence.length) {
+    simonTurn();
   }
 }
 
@@ -92,4 +92,14 @@ function resetGame() {
   simonSequence = [];
   playerSequence = [];
   round = 0;
+}
+
+function gameOver() {
+  alert("GAME OVER");
+  resetGame();
+  location.reload(true);
+}
+
+function score() {
+  $score.innerText = "Score " + simonSequence.length;
 }
