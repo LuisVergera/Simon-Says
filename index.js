@@ -6,11 +6,10 @@ const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
 const panels = document.getElementsByClassName("panel");
 let $score = document.getElementById("score");
-const randomSequence = Math.floor(Math.random() * 4);
 const activeSequence = [green, yellow, red, blue];
 
-var simonSequence = [];
-var playerSequence = [];
+let simonSequence = [];
+let playerSequence = [];
 
 let round = 0;
 
@@ -32,19 +31,20 @@ function flash(panel) {
 function simonTurn() {
   playerSequence = [];
   round += 1;
-  score();
-  getColour();
-  simonTurnHandler();
+  updateScore();
+  addColour();
+  handleNextTurn();
 }
 
-function getColour() {
+function addColour() {
   let randomSequence = Math.floor(Math.random() * 4);
   let activePanels = panels[randomSequence];
   simonSequence.push(activePanels.id);
 }
 
-function simonTurnHandler() {
+function handleNextTurn() {
   disableClick();
+  updateState("Simon turn", true);
   let i = 0;
   let intervalID = setInterval(function () {
     flash(panels[simonSequence[i]]);
@@ -52,6 +52,7 @@ function simonTurnHandler() {
     if (i >= round) {
       clearInterval(intervalID);
       enableClick();
+      updateState("Player's turn");
     }
   }, 1000);
 }
@@ -95,11 +96,23 @@ function resetGame() {
 }
 
 function gameOver() {
-  alert("GAME OVER");
+  updateState("Game Over!", true);
   resetGame();
   location.reload(true);
 }
 
-function score() {
+function updateScore(score) {
   $score.innerText = "Score " + simonSequence.length;
+}
+
+function updateState(estado, error = false) {
+  const $estado = document.querySelector("#estado");
+  $estado.textContent = estado;
+  if (error) {
+    $estado.classList.remove("alert-primary");
+    $estado.classList.add("alert-danger");
+  } else {
+    $estado.classList.remove("alert-danger");
+    $estado.classList.add("alert-primary");
+  }
 }

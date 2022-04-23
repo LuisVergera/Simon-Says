@@ -4,12 +4,74 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Simon Says Game</title>
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
   </head>
+  <style type="text/css">
+    body {
+      text-align: center;
+      margin: 30px;
+    }
+
+    .panel {
+      width: 200px;
+      height: 200px;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .panel:hover {
+      border: 1px solid black;
+      box-shadow: inset 0px 0px 0px 10px black;
+      box-sizing: border-box;
+    }
+
+    .botton-right-panel {
+      border-bottom-right-radius: 100%;
+      background-color: red;
+    }
+
+    .botton-left-panel {
+      border-bottom-left-radius: 100%;
+      background-color: blue;
+    }
+
+    .top-right-panel {
+      border-top-right-radius: 100%;
+      background-color: yellow;
+    }
+
+    .top-left-panel {
+      border-top-left-radius: 100%;
+      background-color: green;
+    }
+
+    .active {
+      background-color: white;
+    }
+  </style>
   <body>
-    <div>
-      <h3 id="score"></h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="alert alert-primary" role="alert" id="estado">
+            Press Start to play!
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <p>
+            <strong id="score"></strong>
+          </p>
+        </div>
+        <div class="col-sm-2">
+          <button type="button" class="btn btn-primary" id="start">
+            Start
+          </button>
+        </div>
+      </div>
     </div>
     <div>
       <div class="panel top-left-panel" id="0"></div>
@@ -21,7 +83,6 @@
       <div class="panel botton-right-panel" id="3"></div>
     </div>
     <div class="center"></div>
-    <button type="button" id="start">START</button>
 
     <script type="text/javascript" src="index.js"></script>
   </body>
